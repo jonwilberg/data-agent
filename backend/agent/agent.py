@@ -1,6 +1,6 @@
 """Census Data Agent using LangChain."""
 
-from langchain.agents import create_sql_agent
+from langchain_community.agent_toolkits.sql.base import create_sql_agent
 from langchain.agents.agent_types import AgentType
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain_core.callbacks.stdout import StdOutCallbackHandler
@@ -15,7 +15,7 @@ from datetime import datetime, date
 from config import settings
 from database.manager import db_manager
 from agent.prompts import CHART_DATA_PROMPT
-from api.models import ChartData
+from api.models import ChartData, AgentResponse
 
 logger = logging.getLogger(__name__)
 
@@ -74,14 +74,14 @@ class CensusDataAgent:
         )
 
     
-    def ask_question(self, question: str) -> Dict[str, Any]:
+    def ask_question(self, question: str) -> AgentResponse:
         """Ask a question about Census data.
         
         Args:
             question: Natural language question about Census data
             
         Returns:
-            Dictionary with answer and metadata
+            AgentResponse with answer and metadata
         """
         try:
             logger.info(f"Processing question: {question}")
@@ -103,22 +103,22 @@ class CensusDataAgent:
                     sql_results=sql_capture.sql_results[-1]
                 )
             
-            return {
-                "text_answer": text_answer,
-                "data": chart_data,
-                "question": question,
-                "status": "success"
-            }
+            return AgentResponse(
+                text_answer=text_answer,
+                data=chart_data,
+                question=question,
+                status="success"
+            )
             
         except Exception as e:
             logger.error(f"Error processing question: {e}")
-            return {
-                "question": question,
-                "text_answer": f"Sorry, I encountered an error: {str(e)}",
-                "data": None,
-                "status": "error",
-                "error": str(e)
-            }
+            return AgentResponse(
+                question=question,
+                text_answer=f"Sorry, I encountered an error: {str(e)}",
+                data=None,
+                status="error",
+                error=str(e)
+            )
     
     def generate_chart_data(self, question: str, text_answer: str, sql_results: str) -> Dict[str, Any]:
         """Generate chart data from SQL results.
