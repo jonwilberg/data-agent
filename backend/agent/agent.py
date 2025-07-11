@@ -29,6 +29,7 @@ class DateTimeEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
+
 class SQLResultsCapture(BaseCallbackHandler):
     """Callback handler to capture SQL query results during agent execution."""
     
