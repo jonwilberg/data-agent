@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 import { SearchBar } from "../components/SearchBar";
 import { ChartDisplay } from "../components/ChartDisplay";
 import type { AgentResponse, ChartData } from "../types/api";
@@ -79,9 +80,22 @@ export function Welcome() {
                     </div>
                     <div className="mb-3">
                       {conversation.response ? (
-                        <p className="text-gray-700 leading-relaxed">
-                          {conversation.response.text_answer}
-                        </p>
+                        <div className="text-gray-700 leading-relaxed prose prose-sm max-w-none">
+                          <ReactMarkdown
+                            components={{
+                              p: ({ children }) => <p className="mb-3 last:mb-0">{children}</p>,
+                              strong: ({ children }) => <strong className="font-semibold text-gray-800">{children}</strong>,
+                              ol: ({ children }) => <ol className="list-decimal list-inside space-y-1 mb-3">{children}</ol>,
+                              ul: ({ children }) => <ul className="list-disc list-inside space-y-1 mb-3">{children}</ul>,
+                              li: ({ children }) => <li className="ml-2">{children}</li>,
+                              h1: ({ children }) => <h1 className="text-xl font-bold mb-2">{children}</h1>,
+                              h2: ({ children }) => <h2 className="text-lg font-semibold mb-2">{children}</h2>,
+                              h3: ({ children }) => <h3 className="text-md font-medium mb-2">{children}</h3>,
+                            }}
+                          >
+                            {conversation.response.text_answer}
+                          </ReactMarkdown>
+                        </div>
                       ) : (
                         <div className="flex items-center space-x-2 text-gray-500">
                           <div className="animate-spin h-4 w-4 border-2 border-gray-400 border-t-transparent rounded-full"></div>
