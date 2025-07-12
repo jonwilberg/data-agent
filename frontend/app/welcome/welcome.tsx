@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import { SearchBar } from "../components/SearchBar";
 import { ChartDisplay } from "../components/ChartDisplay";
@@ -17,6 +17,13 @@ export function Welcome() {
   const [currentChart, setCurrentChart] = useState<ChartData | null>(null);
   const [hasResults, setHasResults] = useState(false);
   const [animationStage, setAnimationStage] = useState<AnimationStage>('welcome');
+  
+  // Auto-scroll implementation
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(scrollToBottom, [conversations]);
 
   const handleNewQuestion = (question: string) => {
     const newConversation: Conversation = {
@@ -105,6 +112,7 @@ export function Welcome() {
                     </div>
                   </div>
                 ))}
+                <div ref={messagesEndRef} />
               </div>
             </div>
             
