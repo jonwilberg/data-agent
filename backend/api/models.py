@@ -1,17 +1,45 @@
 """API models for data-agent."""
 
-from pydantic import BaseModel, Field
-from typing import List, Optional
+from pydantic import BaseModel, Field, computed_field
+from typing import List, Optional, Union
+from enum import StrEnum, auto
 
 
-class ChartData(BaseModel):
-    """Pydantic model for structured chart data."""
+class ChartType(StrEnum):
+    """Enumeration of supported chart types."""
+    bar = auto()
+    scatter = auto()
+
+
+class BarChartData(BaseModel):
+    """Pydantic model for bar chart data."""
     
-    values: List[float] = Field(description="Numeric values for the chart")
-    labels: List[str] = Field(description="Labels for each value")
+    values: List[float] = Field(description="Numeric values for the bars")
+    labels: List[str] = Field(description="Labels for each bar")
     x_axis_title: str = Field(description="Title for x-axis")
     y_axis_title: str = Field(description="Title for y-axis") 
     chart_title: str = Field(description="Main chart title")
+
+    @computed_field
+    def chart_type(self) -> ChartType:
+        return ChartType.bar
+
+class ScatterChartData(BaseModel):
+    """Pydantic model for scatter chart data."""
+    
+    x_values: List[float] = Field(description="X-axis numeric values")
+    y_values: List[float] = Field(description="Y-axis numeric values")
+    labels: List[str] = Field(description="Labels for each data point")
+    x_axis_title: str = Field(description="Title for x-axis")
+    y_axis_title: str = Field(description="Title for y-axis")
+    chart_title: str = Field(description="Main chart title")
+
+    @computed_field
+    def chart_type(self) -> ChartType:
+        return ChartType.scatter
+
+
+ChartData = Union[BarChartData, ScatterChartData]
 
 
 class QuestionRequest(BaseModel):

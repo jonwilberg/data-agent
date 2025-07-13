@@ -1,64 +1,26 @@
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
 import type { ChartData } from '../types/api';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+import { isBarChart, isScatterChart } from '../types/api';
+import { BarChart } from './BarChart';
+import { ScatterChart } from './ScatterChart';
 
 interface ChartDisplayProps {
   data: ChartData;
 }
 
 export function ChartDisplay({ data }: ChartDisplayProps) {
-  const chartData = {
-    labels: data.labels,
-    datasets: [
-      {
-        label: data.chart_title,
-        data: data.values,
-        backgroundColor: 'rgba(59, 130, 246, 0.6)',
-        borderColor: 'rgba(59, 130, 246, 1)',
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false,
-      },
-      title: {
-        display: true,
-        text: data.chart_title,
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-  };
-
+  if (isBarChart(data)) {
+    return <BarChart data={data} />;
+  } else if (isScatterChart(data)) {
+    return <ScatterChart data={data} />;
+  }
+  
+  // Fallback for unknown chart types
   return (
-    <div className="h-96">
-      <Bar data={chartData} options={options} />
+    <div className="h-96 flex items-center justify-center text-gray-500">
+      <div className="text-center">
+        <div className="text-4xl mb-2">⚠️</div>
+        <p>Unsupported chart type: {(data as any).chart_type}</p>
+      </div>
     </div>
   );
 }
