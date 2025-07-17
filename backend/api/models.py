@@ -42,6 +42,13 @@ class ScatterChartData(BaseModel):
 ChartData = Union[BarChartData, ScatterChartData]
 
 
+class ChartTypeDecision(BaseModel):
+    """Model for structured chart type selection."""
+    
+    chart_type: ChartType = Field(description="The recommended chart type for the data")
+    reasoning: str = Field(description="Brief explanation for why this chart type was chosen")
+
+
 class QuestionRequest(BaseModel):
     """Request model for asking questions."""
     
