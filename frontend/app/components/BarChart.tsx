@@ -47,6 +47,12 @@ export function BarChart({ data }: BarChartProps) {
       title: {
         display: true,
         text: data.chart_title,
+        font: {
+          family: 'Inter, ui-sans-serif, system-ui, sans-serif',
+          size: 18,
+          weight: 'bold',
+        },
+        color: '#1f2937',
       },
     },
     scales: {
@@ -54,12 +60,38 @@ export function BarChart({ data }: BarChartProps) {
         title: {
           display: true,
           text: data.x_axis_title,
+          font: {
+            family: 'Inter, ui-sans-serif, system-ui, sans-serif',
+            size: 14,
+            weight: 'bold',
+          },
+          color: '#374151',
+        },
+        ticks: {
+          font: {
+            family: 'Inter, ui-sans-serif, system-ui, sans-serif',
+            size: 14,
+          },
+          color: '#6b7280',
         },
       },
       y: {
         title: {
           display: true,
           text: data.y_axis_title,
+          font: {
+            family: 'Inter, ui-sans-serif, system-ui, sans-serif',
+            size: 14,
+            weight: 'bold',
+          },
+          color: '#374151',
+        },
+        ticks: {
+          font: {
+            family: 'Inter, ui-sans-serif, system-ui, sans-serif',
+            size: 14,
+          },
+          color: '#6b7280',
         },
         beginAtZero: true,
       },
@@ -67,7 +99,7 @@ export function BarChart({ data }: BarChartProps) {
   };
 
   return (
-    <div className="h-96">
+    <div className="flex-1 h-full">
       <Bar data={chartData} options={options} />
     </div>
   );

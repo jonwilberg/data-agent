@@ -63,7 +63,7 @@ export function SearchBar({ compact = false, onResponse, onQuestion }: SearchBar
           type="text"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          placeholder={compact ? "Ask another question..." : "Ask about census data... e.g., Which county has the highest median income?"}
+          placeholder={compact ? "Ask another question..." : "Ask about census data"}
           className={`w-full pl-12 pr-20 text-gray-900 bg-white border border-gray-200 rounded-2xl shadow-lg focus:outline-none focus:border-blue-200 focus:ring-0 placeholder-gray-400 ${
             compact ? "py-2 text-base" : "py-3 sm:py-4 text-base sm:text-lg"
           }`}

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import { SearchBar } from "../components/SearchBar";
 import { ChartDisplay } from "../components/ChartDisplay";
+import { SuggestedPrompts } from "../components/SuggestedPrompts";
 import type { AgentResponse, ChartData } from "../types/api";
 
 interface Conversation {
@@ -36,6 +37,21 @@ export function Welcome() {
     setHasResults(true);
   };
 
+  const handlePromptSelect = async (prompt: string) => {
+    // Add question to chat history immediately
+    handleNewQuestion(prompt);
+    
+    // Trigger the API call
+    try {
+      const { askQuestion } = await import("../services/api");
+      const result = await askQuestion(prompt);
+      handleNewResponse(prompt, result);
+    } catch (error) {
+      console.error("Error fetching response:", error);
+      // Handle error appropriately
+    }
+  };
+
   const handleNewResponse = (question: string, response: AgentResponse) => {
     setConversations(prev => {
       const updated = [...prev];
@@ -66,17 +82,19 @@ export function Welcome() {
                 Census Data Explorer
               </h1>
               <p className="text-xl text-gray-600">
-                Ask natural language questions about US census data
+                Ask natural language questions about New York census data
               </p>
             </div>
+            <SuggestedPrompts onPromptSelect={handlePromptSelect} />
             <SearchBar onResponse={handleNewResponse} onQuestion={handleNewQuestion} />
           </div>
         </div>
       ) : (
-        <div className="flex min-h-screen">
+        <div className="flex h-screen overflow-hidden">
           {/* Left Panel - Conversation History */}
           <div className="w-1/2 flex flex-col">
-            <div className="flex-1 p-6 overflow-y-auto flex flex-col justify-end">
+            <div className="flex-1 p-6 overflow-y-auto flex flex-col">
+              <div className="flex-1"></div>
               <div className="space-y-6">
                 {conversations.map((conversation, index) => (
                   <div key={index} className="pb-6">
@@ -123,11 +141,11 @@ export function Welcome() {
           </div>
           
           {/* Right Panel - Chart Display with Slide Animation */}
-          <div className={`w-1/2 bg-white border-l border-gray-200 p-6 transform transition-all duration-500 ease-out flex flex-col justify-end ${
+          <div className={`w-1/2 bg-white border-l border-gray-200 p-6 transform transition-all duration-500 ease-out flex flex-col ${
             animationStage === 'complete' ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
           }`}>
             {currentChart ? (
-              <div className="pb-12">
+              <div className="flex-1 flex flex-col">
                 <ChartDisplay data={currentChart} />
               </div>
             ) : null}
