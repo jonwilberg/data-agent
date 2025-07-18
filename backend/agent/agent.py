@@ -64,7 +64,7 @@ class CensusDataAgent:
 
         self.agent = create_sql_agent(
             prefix=SQL_PREFIX,
-            top_k=10,
+            top_k=20,
             llm=self.llm,
             toolkit=self.toolkit,
             verbose=True,
