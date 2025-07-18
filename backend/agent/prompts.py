@@ -22,7 +22,7 @@ Question: {question}
 Answer: {text_answer}
 Agent Execution Steps: {intermediate_steps}
 
-Choose between BAR and SCATTER charts based on these guidelines:
+Choose between BAR, SCATTER, and RADAR charts based on these guidelines:
 
 BAR CHARTS - Use when:
 - Single metric across multiple entities
@@ -33,6 +33,12 @@ SCATTER PLOTS - Use when:
 - Showing relationships between two variables
 - Correlation analysis between different metrics
 - Questions asking about connections, correlations, trends
+
+RADAR CHARTS - Use when:
+- Comparing multiple entities across multiple dimensions/metrics
+- Multi-dimensional analysis (e.g., comparing counties on population, income, education, housing)
+- Questions asking for comprehensive comparisons or profiles
+- When you have 3+ metrics per entity that would benefit from a holistic view
 
 Analyze the question intent and data structure from the agent's execution steps to make the best choice."""
 
@@ -47,7 +53,10 @@ Create a bar chart structure:
 - Create clear labels for each bar (counties, categories, etc.)
 - Generate meaningful axis titles and chart title
 - Focus on categorical comparisons and rankings
-- Use the full context from the agent's reasoning and SQL execution"""
+- Use the full context from the agent's reasoning and SQL execution
+
+Output example: {output_example}
+"""
 
 SCATTER_CHART_DATA_PROMPT = """Extract data for a scatter plot from this census query result.
 
@@ -61,4 +70,24 @@ Create a scatter plot structure:
 - Create labels for each data point (counties, entities, etc.)
 - Generate meaningful axis titles that describe the relationship
 - Focus on showing patterns and correlations between variables
-- Use the full context from the agent's reasoning and SQL execution"""
+- Use the full context from the agent's reasoning and SQL execution
+
+Output example: {output_example}
+"""
+
+RADAR_CHART_DATA_PROMPT = """Extract data for a radar chart from this census query result.
+
+Question: {question}
+Answer: {text_answer}
+Agent Execution Steps: {intermediate_steps}
+
+Create a radar chart structure:
+- Identify 1-5 entities (counties, areas, etc.) to compare
+- Extract 3-6 numeric metrics per entity from the agent's execution steps
+- Do NOT normalize or scale values
+- Create datasets array with label and data for each entity
+- Generate meaningful axis_titles for each dimension/metric
+- Use the full context from the agent's reasoning and SQL execution
+
+Output example: {output_example}
+"""

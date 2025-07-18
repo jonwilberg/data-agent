@@ -36,11 +36,11 @@ PROFILE_VARIABLES = [
     "DP02_0065E",   # Bachelor's degree holders
     "DP02_0066E",   # Graduate/professional degree holders
     "DP02_0062E",   # High school graduates
-    "DP03_0005E",   # Unemployment rate
+    "DP03_0005E",   # Unemployment count
     "DP03_0062E",   # Median earnings
     "DP05_0018E",   # Median age
     "DP05_0019E",   # Population under 18
-    "DP05_0021E",   # Population 65 and over
+    "DP05_0021E",   # Population 18 and over
     "DP05_0037E",   # White alone
     "DP05_0038E",   # Black/African American alone
     "DP05_0071E",   # Hispanic/Latino 
@@ -163,8 +163,8 @@ def insert_data(headers, rows):
                     total_population, median_household_income, total_housing_units,
                     owner_occupied_units, renter_occupied_units,
                     bachelors_degree_holders, graduate_degree_holders, high_school_graduates,
-                    unemployment_rate, median_earnings,
-                    median_age, population_under_18, population_65_and_over,
+                    unemployed_count, median_earnings,
+                    median_age, population_under_18, population_18_and_over,
                     white_alone, black_alone, hispanic_latino,
                     median_home_value
                 ) VALUES (

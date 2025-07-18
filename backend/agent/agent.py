@@ -18,7 +18,8 @@ from agent.prompts import (
     SQL_PREFIX,
     CHART_TYPE_DECISION_PROMPT, 
     BAR_CHART_DATA_PROMPT, 
-    SCATTER_CHART_DATA_PROMPT
+    SCATTER_CHART_DATA_PROMPT,
+    RADAR_CHART_DATA_PROMPT
 )
 from api.models import (
     ChartData, 
@@ -26,6 +27,7 @@ from api.models import (
     ChartTypeDecision, 
     BarChartData, 
     ScatterChartData, 
+    RadarChartData,
     ChartType
 )
 
@@ -167,23 +169,33 @@ class CensusDataAgent:
                 chart_prompt = BAR_CHART_DATA_PROMPT.format(
                     question=question,
                     text_answer=text_answer,
-                    intermediate_steps=intermediate_steps
+                    intermediate_steps=intermediate_steps,
+                    output_example=BarChartData.get_output_example()
                 )
                 structured_llm = self.llm.with_structured_output(BarChartData)
-            else:  # scatter
+            elif chart_decision.chart_type == ChartType.scatter:
                 chart_prompt = SCATTER_CHART_DATA_PROMPT.format(
                     question=question,
                     text_answer=text_answer,
-                    intermediate_steps=intermediate_steps
+                    intermediate_steps=intermediate_steps,
+                    output_example=ScatterChartData.get_output_example()
                 )
                 structured_llm = self.llm.with_structured_output(ScatterChartData)
+            else:  # radar
+                chart_prompt = RADAR_CHART_DATA_PROMPT.format(
+                    question=question,
+                    text_answer=text_answer,
+                    intermediate_steps=intermediate_steps,
+                    output_example=RadarChartData.get_output_example()
+                )
+                structured_llm = self.llm.with_structured_output(RadarChartData)
             
             chart_response = structured_llm.invoke(
                 chart_prompt,
                 config={"callbacks": [StdOutCallbackHandler()]}
             )
             
-            logger.info(f"Generated {chart_decision.chart_type} chart data successfully")
+            logger.info(f"Generated chart data successfully: \n{chart_response.model_dump_json(indent=2)}")
             return chart_response
             
         except Exception as e:
